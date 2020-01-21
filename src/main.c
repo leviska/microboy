@@ -1,4 +1,4 @@
-#include "render.h"
+#include "./platforms/linux/render.h"
 
 int main() {
 	const int W = 128;
@@ -11,7 +11,7 @@ int main() {
 	}
 	Flush();
 	while(1) {
-
+		Flush();
 	}
 	FreeRender();
 	return 0;

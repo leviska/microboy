@@ -11,7 +11,9 @@ void InitializeRender(int width, int height) {
 	buffer = new sf::Image();
 	buffer->create(width, height);
 	texture = new sf::Texture();
-	sprite = new sf::Sprite(*texture);
+	texture->loadFromImage(*buffer);
+	sprite = new sf::Sprite();
+	sprite->setTexture(*texture, true);
 }
 
 void SetPixel(int i, int j, char r, char g, char b) {
@@ -19,6 +21,11 @@ void SetPixel(int i, int j, char r, char g, char b) {
 }
 
 void Flush() {
+    sf::Event event;
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed)
+            window->close();
+    }
 	texture->loadFromImage(*buffer);
 	window->clear(sf::Color::White);
 	window->draw(*sprite);
