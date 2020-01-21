@@ -44,7 +44,7 @@ $(EXECUTABLE): $(OBJECTSC) $(OBJECTSCPP)
 
 $(BUILDFOLDER)/%.o: $(SOURCEFOLDER)/%.c
 	mkdir -p $(@D)
-	$(CCPP) $(INCLUDECPP) $(CPPFLAGS) -c $< -o $@
+	$(CC) $(INCLUDEC) $(CFLAGS) -c $< -o $@
 
 $(BUILDFOLDER)/%.o: $(SOURCEFOLDER)/%.cpp
 	mkdir -p $(@D)
