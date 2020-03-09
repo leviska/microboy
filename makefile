@@ -1,54 +1,23 @@
 ####################################################
-# Linux build
+# General makefile
+# Calls makefiles/target.make file
 
-###############
-# General info
+MAKEFILES:=makefiles
 
-BINFOLDER:=bin/linux
-BUILDFOLDER:=build/linux
-SOURCEFOLDER:=src
+all:
+	@echo "Select target to build: linux, stm32"
 
-SOURCESC:=main.c
-SOURCESCPP:=platforms/linux/render.cpp
+linux: build
 
-CCPP:=g++
-CC:=gcc
-CFLAGS:=-std=gnu11 -Wall -Wextra -Werror
-CPPFLAGS:=-std=c++17 -Wall -Wextra -Werror
-LDFLAGS:=-lsfml-graphics -lsfml-window -lsfml-system -lstdc++
-OBJECTSC:=$(addprefix $(BUILDFOLDER)/,$(patsubst %.c,%.o,$(SOURCESC)))
-OBJECTSCPP:=$(addprefix $(BUILDFOLDER)/,$(patsubst %.cpp,%.o,$(SOURCESCPP)))
-EXECUTABLE:=$(BINFOLDER)/microtetris
+stm32: build
 
-###############
-# SFML location
-# if your SFML library isn't in os default location
-# set this path to your sfml lib
-# example
-#SFMLPATH:=../SFML-2.5.1
-SFMLPATH:=
-SFMLLIB:=-L"$(SFMLPATH)/lib"
-SFMLINCLUDE:=-I"$(SFMLPATH)/include"
+ifeq ($(MAKECMDGOALS), linux)
+include linux.make
+endif
 
-LIBDIR:=$(if $(SFMLPATH),$(SFMLLIB),)
-INCLUDECPP:=$(if $(SFMLPATH),$(SFMLINCLUDE),)
-INCLUDEC:=
-
-all: build
-
-build: $(SOURCEFOLDER)/$(SOURCESC) $(SOURCEFOLDER)/$(SOURCESCPP) $(EXECUTABLE)
-
-$(EXECUTABLE): $(OBJECTSC) $(OBJECTSCPP)
-	mkdir -p $(@D)
-	$(CCPP) -o $@ $(OBJECTSC) $(OBJECTSCPP) $(LIBDIR) $(LDFLAGS)
-
-$(BUILDFOLDER)/%.o: $(SOURCEFOLDER)/%.c
-	mkdir -p $(@D)
-	$(CC) $(INCLUDEC) $(CFLAGS) -c $< -o $@
-
-$(BUILDFOLDER)/%.o: $(SOURCEFOLDER)/%.cpp
-	mkdir -p $(@D)
-	$(CCPP) $(INCLUDECPP) $(CPPFLAGS) -c $< -o $@
+ifeq ($(MAKECMDGOALS), stm32)
+include stm32.make
+endif
 
 clean:
-	rm -rf $(BUILDFOLDER) $(EXECUTABLE)
+	rm -rf build/* bin/*
